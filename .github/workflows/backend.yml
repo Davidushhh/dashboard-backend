@@ -22,11 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Make envfile
-        uses: Davidushhh/dashboard-backend
-        with:
+      - name: Do Something with env files
+        env:
           ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
-          file_name: .env
+        run: echo $QA_ENV_FILE > .env
 
       - name: Install dependendencies.
         run: 
