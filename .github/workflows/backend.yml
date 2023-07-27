@@ -22,14 +22,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Make envfile
+        with:
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
+          file_name: .env
+
       - name: Install dependendencies.
         run: 
           npm install
-
-      - name: Copy .env to the server
-        env:
-        ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }} # Використання секрету як змінної середовища
-        run: echo "$ENV_FILE_CONTENT" > .env
  
       - name: pm2 stop 0
         run: pm2 stop 0
