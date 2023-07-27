@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Make envfile
-        uses: actions/create-envfile@v2.0
+        uses: Davidushhh/dashboard-backend
         with:
           ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
           file_name: .env
