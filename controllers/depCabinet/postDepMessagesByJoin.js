@@ -13,6 +13,17 @@ const postDepMessagesByJoin = async (req, res, next) => {
     text,
   } = req.body;
 
+  console.log(
+    "data:",
+    senderName,
+    senderEmail,
+    recieverLevel,
+    recieverDistrict,
+    recieverHromada,
+    title,
+    text
+  );
+
   const newMessageQuery =
     "INSERT INTO dep_messages (senderName, senderEmail, recieverLevel, recieverDistrict, recieverHromada, title, text) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -41,7 +52,7 @@ const postDepMessagesByJoin = async (req, res, next) => {
           const data = fs.readFileSync(pathToPdfFile);
 
           console.log("pathToPdfFile", pathToPdfFile);
-          console.log("data", data);
+          console.log("pdf data", data);
 
           res.contentType("application/pdf");
           res.setHeader(
