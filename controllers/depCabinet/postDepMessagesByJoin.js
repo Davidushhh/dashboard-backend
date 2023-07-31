@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { pool } = require("../../models/connection");
 const { createMessagePdf } = require("../../services/createMessagePdf");
 
@@ -36,18 +37,21 @@ const postDepMessagesByJoin = async (req, res, next) => {
         }
 
         try {
-          // Викликаємо функцію для створення PDF
-          const filePath = await createMessagePdf(req.body);
+          const pathToPdfFile = await createMessagePdf(req.body);
+          const data = fs.readFileSync(pathToPdfFile);
 
-          console.log("filePath", filePath);
+          console.log("pathToPdfFile", pathToPdfFile);
+          console.log("data", data);
 
-          return res.status(201).json({
-            message: "message created",
-            code: 201,
-            // filePath: filePath, // Відправляємо шлях до створеного PDF файлу у відповідь
-          });
-        } catch (pdfError) {
-          return res.status(500).json({ message: pdfError.message });
+          res.contentType("application/pdf");
+          res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=e-message.pdf"
+          );
+
+          return res.status(201).send(data);
+        } catch (error) {
+          return res.status(500).json({ message: error.message });
         }
       }
     );
