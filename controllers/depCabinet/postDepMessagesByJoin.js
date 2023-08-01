@@ -6,15 +6,18 @@ const postDepMessagesByJoin = async (req, res, next) => {
   const {
     senderName,
     senderEmail,
+    senderAddress = null,
+    senderPhone = null,
     recieverLevel,
     recieverDistrict = null,
     recieverHromada = null,
-    title,
+    title = null,
     text,
+    isAnswerByEmail = null,
   } = req.body;
 
   const newMessageQuery =
-    "INSERT INTO dep_messages (senderName, senderEmail, recieverLevel, recieverDistrict, recieverHromada, title, text) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO dep_messages (senderName, senderEmail, senderAddress, senderPhone, recieverLevel, recieverDistrict, recieverHromada, title, text, isAnswerByEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   try {
     pool.query(
@@ -22,11 +25,14 @@ const postDepMessagesByJoin = async (req, res, next) => {
       [
         senderName,
         senderEmail,
+        senderAddress,
+        senderPhone,
         recieverLevel,
         recieverDistrict,
         recieverHromada,
         title,
         text,
+        isAnswerByEmail,
       ],
       async (err, result) => {
         if (err) {

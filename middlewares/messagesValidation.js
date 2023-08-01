@@ -4,6 +4,8 @@ const messagesValidation = (req, res, next) => {
   const schema = Joi.object({
     senderName: Joi.string().min(3).max(255).required(),
     senderEmail: Joi.string().min(3).max(255).required(),
+    senderAddress: Joi.string().min(3).max(255),
+    senderPhone: Joi.string().min(3).max(20),
     recieverLevel: Joi.string().valid("oda", "district", "hromada").required(),
     recieverDistrict: Joi.string().valid(
       "Ужгородський",
@@ -81,7 +83,7 @@ const messagesValidation = (req, res, next) => {
       "Довжанська",
       null
     ),
-    title: Joi.string().min(3).max(255).required(),
+    title: Joi.string().min(3).max(55),
     text: Joi.string().min(3).max(2000).required(),
   });
 

@@ -1,52 +1,33 @@
 const fs = require("fs");
 const path = require("path");
 const { jsPDF } = require("jspdf");
-const { testFont, fontRoboto } = require("../fonts/fontRoboto");
-const { optional } = require("joi");
-
-// Завантаження шрифту
-// const fontPath = "./fonts/Roboto-Regular.ttf";
-
-// const fontData = fs.readFileSync(fontPath);
-
-// const customFont = {
-//   type: "truetype",
-//   data: fontData,
-// };
+const { fontRoboto } = require("../fonts/fontRoboto");
 
 const createMessagePdf = async (messageData) => {
   const {
     senderName,
     senderEmail,
+    senderAddress,
+    senderPhone,
     recieverLevel,
     recieverDistrict,
     recieverHromada,
     title,
     text,
+    isAnswerByEmail,
   } = messageData;
 
-  const doc = new jsPDF();
+  const doc = new jsPDF({ fontSize: 12, lineHeight: 1 });
 
   // Додавання тексту з використанням встановленого шрифту
   doc.addFileToVFS("Roboto-Regular.ttf", fontRoboto());
   doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
 
   doc.setFont("Roboto");
-  doc.setFontSize(12);
 
   // Розмір сторінки A4 (ширина x висота)
   const pageWidth = 210;
   const pageHeight = 297;
-
-  // Додавання інформації до PDF файлу
-  // Функція для виведення тексту посередині сторінки по осі x
-  const textCentered = (text, y) => {
-    const textWidth =
-      (doc.getStringUnitWidth(text) * doc.internal.getFontSize()) /
-      doc.internal.scaleFactor;
-    const x = (pageWidth - textWidth) / 2;
-    doc.text(text, x, y);
-  };
 
   // Одержувач
   if (recieverLevel === "oda") {
@@ -68,10 +49,29 @@ const createMessagePdf = async (messageData) => {
   doc.text("+380 50 55 55 555", 105, 80);
 
   // Основний текст
-  doc.text(`Тема: ${title}`, 20, 100);
-  doc.text(text, 10, 115);
+  doc.text("Звернення", 97, 100);
+  // doc.text(title, 14, 100);
 
-  // doc.text(Date.now(), 10, 270);
+  // Розбиваємо довгий текст на кілька рядків
+  const marginLeft = 14;
+  const marginRight = 10;
+  const textX = marginLeft;
+  let textY = 115;
+
+  const lines = doc.splitTextToSize(text, pageWidth - marginLeft - marginRight);
+
+  doc.text(lines, textX, textY);
+  // lines.forEach((line) => {
+  //   doc.text(line, textX, textY);
+  //   textY += lineHeight;
+  // });
+
+  if (true) {
+    doc.text("Бажаю отримати відповідь на email.", 14, 270);
+  }
+
+  doc.text(new Date().toLocaleDateString(), 14, 280);
+  doc.text(senderName, 105, 280);
 
   // Збереження PDF файлу
   const filePath = path.join(__dirname, "e-message.pdf");
