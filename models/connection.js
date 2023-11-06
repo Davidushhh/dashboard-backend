@@ -1,38 +1,33 @@
 const mysql = require("mysql");
 
+const { PORT, SERVERNAME, DBUSER, PASSWORD, DB } = process.env;
+
 const knex = require("knex")({
   client: "mysql",
   connection: {
-    port: 4004,
-    host: process.env.SERVERNAME,
-    user: process.env.DBUSER,
-    password: process.env.PASSWORD,
-    database: process.env.DB,
+    port: PORT,
+    host: SERVERNAME,
+    user: DBUSER,
+    password: PASSWORD,
+    database: DB,
   },
 });
 
 const pool = mysql.createConnection({
-  host: process.env.SERVERNAME,
-  user: process.env.DBUSER,
-  password: process.env.PASSWORD,
-  database: process.env.DB,
+  host: SERVERNAME,
+  user: DBUSER,
+  password: PASSWORD,
+  database: DB,
 });
-
-// connection to local test DB
-const poolNickDB = mysql.createConnection({
-  host: process.env.NICK_SERVERNAME,
-  user: process.env.NICK_USER,
-  password: process.env.NICK_PASSWORD,
-  database: process.env.NICK_DB,
-});
-
-console.log("server:", process.env.SERVERNAME);
 
 const connectToSQL = async () => {
   return pool.connect(function (err) {
-    if (err) throw err;
+    if (err) {
+      console.log("Database connection fail!");
+      throw err;
+    }
+
     console.log("Database connection successful");
   });
 };
-
-module.exports = { pool, poolNickDB, knex, connectToSQL };
+module.exports = { pool, knex, connectToSQL };

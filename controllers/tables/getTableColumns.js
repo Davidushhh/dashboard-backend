@@ -1,17 +1,9 @@
 const { pool } = require("../../models/connection");
 
-const getDataByParams = async (req, res, next) => {
-  function generateTemplateString(obj) {
-    const keys = Object.keys(obj);
-    const template = keys.map((key) => `${key} = '${obj[key]}'`).join(" AND ");
-    return template;
-  }
-
+const getTableColumns = async (req, res, next) => {
   const { table } = req.params;
 
-  const templateString = generateTemplateString(req.query);
-
-  const dynamicQuery = `SELECT * FROM ${table} WHERE ${templateString}`;
+  const dynamicQuery = `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${table}'`;
 
   try {
     pool.query(dynamicQuery, function (err, result, fields) {
@@ -23,11 +15,13 @@ const getDataByParams = async (req, res, next) => {
         });
       }
 
+      const values = result.map((obj) => obj.COLUMN_NAME);
+
       res.status(200).json({
-        message: "data by params",
+        message: "table columns",
         code: 200,
         length: result.length,
-        data: result,
+        data: values,
       });
     });
   } catch (error) {
@@ -35,4 +29,4 @@ const getDataByParams = async (req, res, next) => {
   }
 };
 
-module.exports = { getDataByParams };
+module.exports = { getTableColumns };

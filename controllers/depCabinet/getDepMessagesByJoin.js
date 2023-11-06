@@ -1,72 +1,34 @@
 const { pool } = require("../../models/connection");
 
+const {
+  messagesOdaQuery,
+  messagesDistrictQuery,
+  messagesHromadaQuery,
+  messagesOdaDeputyQuery,
+  messagesDistictDeputyQuery,
+  messagesHromadaDeputyQuery,
+} = require("./depCabinetQuerys");
+
 const getDepMessagesByJoin = async (req, res, next) => {
   const { id } = req.user;
+  const { page = 0, limit = 10 } = req.query;
+  const skip = page * limit;
 
-  const messagesQueryOda = () => {
-    return `SELECT 
-  m.id,
-  m.senderName,
-  m.senderEmail,
-  m.title,
-  m.text,
-  m.isReaded,        
-  m.isAnswered,
-  m.isArchived,
-  m.answeredAt,
-  m.createdAt 
-    FROM dep_messages AS m
-    INNER JOIN dep_users AS u ON m.recieverLevel = u.access
-    WHERE m.recieverLevel = 'oda';`;
-  };
-
-  const messagesQueryDistrict = (district) => {
-    return `SELECT 
-  m.id,
-  m.senderName,
-  m.senderEmail,
-  m.title,
-  m.text,
-  m.isReaded,        
-  m.isAnswered,
-  m.isArchived,
-  m.answeredAt,
-  m.createdAt 
-    FROM dep_messages AS m
-    INNER JOIN dep_users AS u ON m.recieverLevel = u.access
-    AND m.recieverDistrict = u.district
-    WHERE m.recieverLevel = 'district' AND m.recieverDistrict = '${district}';`;
-  };
-
-  const messagesQueryHromada = (district, hromada) => {
-    return `SELECT 
-  m.id,
-  m.senderName,
-  m.senderEmail,
-  m.title,
-  m.text,
-  m.isReaded,        
-  m.isAnswered,
-  m.isArchived,
-  m.answeredAt,
-  m.createdAt 
-    FROM dep_messages AS m
-    INNER JOIN dep_users AS u ON m.recieverLevel = u.access
-                             AND m.recieverDistrict = u.district
-                             AND m.recieverHromada = u.hromada
-   WHERE m.recieverLevel = 'hromada' AND m.recieverDistrict = '${district}' AND m.recieverHromada = '${hromada}';`;
-  };
-
-  const messageQuery = `SELECT access, district, hromada
-        FROM dep_users WHERE id = '${id}'`;
+  const messageQuery = `SELECT 
+  access,
+  district,
+  hromada,
+  position,
+  structureName
+  FROM dep_users
+  WHERE id = ?`;
 
   try {
-    pool.query(messageQuery, function (err, result, fields) {
+    pool.query(messageQuery, [id], function (err, result, fields) {
       if (err) {
         return res.status(404).json({
           message: "not found",
           code: 404,
-          data: err,
         });
       }
 
@@ -77,29 +39,53 @@ const getDepMessagesByJoin = async (req, res, next) => {
         });
       }
 
-      let queryByRole = "";
+      let queryByLevel = "";
 
-      if (result[0].access === "oda") {
-        queryByRole = messagesQueryOda();
+      if (result[0].access === "oda" && result[0].position === "council") {
+        console.log("oda & concil");
+        queryByLevel = messagesOdaQuery(limit, skip);
       }
 
-      if (result[0].access === "district") {
-        queryByRole = messagesQueryDistrict(result[0].district);
+      if (result[0].access === "district" && result[0].position === "council") {
+        queryByLevel = messagesDistrictQuery(limit, skip, result[0].district);
       }
 
-      if (result[0].access === "hromada") {
-        queryByRole = messagesQueryHromada(
-          result[0].district,
-          result[0].hromada
+      if (result[0].access === "hromada" && result[0].position === "council") {
+        queryByLevel = messagesHromadaQuery(limit, skip, result[0].hromada);
+      }
+
+      if (result[0].access === "oda" && result[0].position === "deputy") {
+        queryByLevel = messagesOdaDeputyQuery(
+          limit,
+          skip,
+          result[0].structureName
         );
       }
 
-      pool.query(queryByRole, function (err, result, fields) {
+      if (result[0].access === "district" && result[0].position === "deputy") {
+        queryByLevel = messagesDistictDeputyQuery(
+          limit,
+          skip,
+          result[0].district,
+          result[0].structureName
+        );
+      }
+
+      if (result[0].access === "hromada" && result[0].position === "deputy") {
+        console.log("hromada & deputy");
+        queryByLevel = messagesHromadaDeputyQuery(
+          limit,
+          skip,
+          result[0].hromada,
+          result[0].structureName
+        );
+      }
+
+      pool.query(queryByLevel, function (err, result, fields) {
         if (err) {
           return res.status(404).json({
             message: "not found",
             code: 404,
-            data: err,
           });
         }
 
@@ -110,10 +96,10 @@ const getDepMessagesByJoin = async (req, res, next) => {
           });
         }
 
-        res.json({
+        res.status(200).json({
           message: "success",
           data: {
-            length: result.length,
+            totalCount: result[0].totalCount,
             userMessages: result,
           },
           code: 200,
@@ -121,7 +107,10 @@ const getDepMessagesByJoin = async (req, res, next) => {
       });
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({
+      message: "dep messages error",
+      code: 500,
+    });
   }
 };
 

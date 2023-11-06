@@ -1,15 +1,11 @@
-const { getAllTables } = require("./getAllTables");
-const { getTableByName } = require("./getTableByName");
-const { getTableColumns } = require("./getTableColumns");
-const { getTableColumnValues } = require("./getTableColumnValues");
+const { getPageConfig } = require("./getPageConfig");
+const { getChartDataByDynamicQuery } = require("./getChartDataByDynamicQuery");
 const { getDataByParams } = require("./getDataByParams");
-const { getDataByParamsMatrix } = require("./getDataByParamsMatrix");
+const { getFilterValues } = require("./getFilterValues");
 
 module.exports = {
-  getDataByParamsMatrix,
-  getAllTables,
-  getTableByName,
-  getTableColumns,
-  getTableColumnValues,
+  getPageConfig,
+  getChartDataByDynamicQuery,
   getDataByParams,
+  getFilterValues,
 };

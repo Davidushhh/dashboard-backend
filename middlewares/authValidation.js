@@ -7,13 +7,18 @@ const signupValidation = (req, res, next) => {
     email: Joi.string()
       .email({
         minDomainSegments: 2,
-        tlds: { allow: ["com", "net"] },
+        // tlds: { allow: ["com", "net"] },
       })
       .required(),
-    structureName: Joi.string().valid("oda", "district", "hromada").required(),
-    phone: Joi.string().min(3).max(30).required(),
-    position: Joi.string().valid("user", "deputy", "admin").required(),
-    access: Joi.string().valid("oda", "district", "hromada").required(),
+    structureName: Joi.string().required(),
+    surname: Joi.string().max(50),
+    firstName: Joi.string().max(50),
+    lastName: Joi.string().max(50),
+    phone: Joi.string().max(30),
+    position: Joi.string()
+      .valid("user", "worker", "deputy", "council", "admin")
+      .required(),
+    access: Joi.string().valid("none", "oda", "district", "hromada"),
     district: Joi.string().valid(
       "Ужгородський",
       "Мукачівський",
@@ -90,12 +95,7 @@ const signupValidation = (req, res, next) => {
       "Довжанська",
       null
     ),
-    phone: Joi.string().min(3).max(30).required(),
   });
-
-  // surname: Joi.string().min(3).max(30).required(),
-  // firstName: Joi.string().min(3).max(30).required(),
-  // lastName: Joi.string().min(3).max(30).required(),
 
   const validationResult = schema.validate(req.body);
 
@@ -111,8 +111,8 @@ const signupValidation = (req, res, next) => {
 
 const loginValidation = (req, res, next) => {
   const schema = Joi.object({
-    login: Joi.string().min(3).max(12).required(),
-    password: Joi.string().min(3).max(12).required(),
+    login: Joi.string().min(3).max(30).required(),
+    password: Joi.string().min(3).max(30).required(),
   });
 
   const validationResult = schema.validate(req.body);

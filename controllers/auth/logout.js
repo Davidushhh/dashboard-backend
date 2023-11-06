@@ -3,15 +3,14 @@ const { pool } = require("../../models/connection");
 const logout = async (req, res, next) => {
   const { id } = req.user;
 
-  const user = `SELECT id FROM dep_users WHERE id = '${id}'`;
+  const user = `SELECT id FROM dep_users WHERE id = ?`;
 
   try {
-    pool.query(user, function (err, result, fields) {
+    pool.query(user, [id], function (err, result, fields) {
       if (err) {
         return res.status(404).json({
           message: "not found",
           code: 404,
-          data: err,
         });
       }
 
@@ -22,9 +21,9 @@ const logout = async (req, res, next) => {
         });
       }
 
-      const updateToken = `UPDATE dep_users SET token = NULL WHERE id = '${id}'`;
+      const updateToken = `UPDATE dep_users SET token = ? WHERE id = ?`;
 
-      pool.query(updateToken, (err, result) => {
+      pool.query(updateToken, [null, id], (err, result) => {
         if (err) {
           return res.status(404).json({
             message: "not found",
@@ -39,7 +38,10 @@ const logout = async (req, res, next) => {
       });
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({
+      message: "logout error",
+      code: 500,
+    });
   }
 };
 

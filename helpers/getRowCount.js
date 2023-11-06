@@ -12,4 +12,16 @@ const getRowCount = (query) => {
   });
 };
 
-module.exports = { getRowCount };
+const makePoolQuery = (query) => {
+  return new Promise((resolve, reject) => {
+    pool.query(query, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+module.exports = { getRowCount, makePoolQuery };

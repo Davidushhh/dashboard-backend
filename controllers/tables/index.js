@@ -1,17 +1,15 @@
-const { getDataForBar } = require("./getDataForBar");
-// const { getDataForBarSQL } = require("./getDataForBarSQL");
-const { getDataForChartKnex } = require("./getDataForChartKnex");
-const { getSumDataForBar } = require("./getSumDataForBar");
-const { getTranformedData } = require("./getTranformedData");
-const { getTranformedDataBar } = require("./getTranformedDataBar");
-const { getTranformedDataDonut } = require("./getTranformedDataDonut");
+const { getUserTable } = require("./getUserTable");
+
+const { createTable } = require("./createTable");
+const { getAllTables } = require("./getAllTables");
+const { getTableColumnValues } = require("./getTableColumnValues");
+const { getTableColumns } = require("./getTableColumns");
 
 module.exports = {
-  getSumDataForBar,
-  getDataForBar,
-  getTranformedData,
-  getTranformedDataBar,
-  getTranformedDataDonut,
-  // getDataForBarSQL,
-  getDataForChartKnex,
+  getUserTable,
+
+  getAllTables,
+  getTableColumns,
+  getTableColumnValues,
+  createTable,
 };

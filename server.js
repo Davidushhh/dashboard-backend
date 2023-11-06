@@ -3,7 +3,8 @@ require("dotenv").config();
 const app = require("./app");
 const { connectToSQL } = require("./models/connection");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4004;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const start = async () => {
   try {

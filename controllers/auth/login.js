@@ -7,15 +7,25 @@ const SECRET_KEY = process.env.SECRET;
 const login = async (req, res, next) => {
   const { login, password } = req.body;
 
-  const userQuery = `SELECT * FROM dep_users WHERE login = '${login}'`;
+  const userQuery = `SELECT id,
+        login,
+        email,
+        password,
+        structureName,
+        phone,
+        position,
+        access,
+        district,
+        hromada,
+        tablesAccess
+        FROM dep_users WHERE login = ?`;
 
   try {
-    pool.query(userQuery, function (err, result, fields) {
+    pool.query(userQuery, [login], function (err, result, fields) {
       if (err) {
         return res.status(404).json({
           message: "not found",
           code: 404,
-          data: err,
         });
       }
 
@@ -35,23 +45,11 @@ const login = async (req, res, next) => {
         });
       }
 
-      // if (!validPassword) {
-      //   // !result[0].verify - here can be additional condition in if statement if we have email varification
-      //   console.log("here__2");
-
-      //   return res.status(401).json({
-      //     code: 401,
-      //     message: "Login or password is wrong",
-      //   });
-      // }
-
       const {
         id,
         login,
         email,
-        surname,
-        firstName,
-        lastName,
+        structureName,
         phone,
         position,
         access,
@@ -62,12 +60,12 @@ const login = async (req, res, next) => {
       const payload = { id };
 
       const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
-      const updateToken = `UPDATE dep_users SET token = '${token}' WHERE id = '${result[0].id}'`;
+      const updateToken = `UPDATE dep_users SET token = ? WHERE id = ?`;
 
-      pool.query(updateToken, (err, result) => {
+      pool.query(updateToken, [token, result[0].id], (err, result) => {
         if (err) {
           return res.status(404).json({
-            message: err.message,
+            message: "login error",
             code: 404,
           });
         }
@@ -80,9 +78,7 @@ const login = async (req, res, next) => {
               id,
               login,
               email,
-              surname,
-              firstName,
-              lastName,
+              structureName,
               phone,
               position,
               access,
@@ -95,7 +91,10 @@ const login = async (req, res, next) => {
       });
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({
+      message: "login error",
+      code: 500,
+    });
   }
 };
 

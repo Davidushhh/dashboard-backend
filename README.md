@@ -1,33 +1,31 @@
 # dashboard-backend
 
-Dashboard backend - Node.js, SQL
+Dashboard backend - Node.js, SQL,
 
 # done
 
 - SQL connection
-
 - get charts routes
 - get charts controllers
-
 - user routes
 - user controllers
-
 - authorization middleware
 - signup, login, logout
+- eslint check
+- env template
+- validation
+- user roles
 
 # todo
 
-- eslint check
-- env template
+- temp dir for temp files
+- pdf messages
 
 - charts model
 - user model
 
 - post charts routes
 - post charts controllers
-
-- user roles
-- validation
 
 - avatars
 
@@ -37,5 +35,9 @@ Dashboard backend - Node.js, SQL
 - check error messeges (error boundary)
 
 - server rendering
-- cybersecurity
-- экранувати SQL запити
+
+# security
+
+- параметризовані/екрановані запити - ?, ? [] - 50/100
+- права доступа
+- валідація, очищення даних - mysql.escape()

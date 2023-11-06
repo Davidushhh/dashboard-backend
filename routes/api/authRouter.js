@@ -9,21 +9,16 @@ const {
 } = require("../../middlewares");
 
 const {
-  getAllUsers,
   getCurrentUser,
   signup,
   login,
   logout,
 } = require("../../controllers/auth");
 
-usersRouter.get("/all-users", ctrlWrapper(getAllUsers));
-
 usersRouter.get("/current-user", authMiddleware, ctrlWrapper(getCurrentUser));
+usersRouter.get("/logout", authMiddleware, ctrlWrapper(logout));
 
 usersRouter.post("/signup", signupValidation, ctrlWrapper(signup));
-
 usersRouter.post("/login", loginValidation, ctrlWrapper(login));
-
-usersRouter.get("/logout", authMiddleware, ctrlWrapper(logout));
 
 module.exports = usersRouter;

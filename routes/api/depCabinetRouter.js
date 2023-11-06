@@ -5,26 +5,45 @@ const {
   ctrlWrapper,
   authMiddleware,
   messagesValidation,
+  answerMessagesValidation,
+  getDepMessageMiddleware,
+  depMiddleware,
 } = require("../../middlewares");
 
 const {
+  postDepMessages,
+  getDeputyName,
   getDepMessages,
-  getDepMessagesByJoin,
-  postDepMessagesByJoin,
+  answerDepMessage,
 } = require("../../controllers/depCabinet");
 
-usersRouter.get("/user-messages", authMiddleware, ctrlWrapper(getDepMessages));
-
+// get deputy names
 usersRouter.get(
-  "/user-messages-join",
-  authMiddleware,
-  ctrlWrapper(getDepMessagesByJoin)
+  "/deputy/search-dep/:recieverLevel",
+  ctrlWrapper(getDeputyName)
 );
 
+// get messages in cabinet
+usersRouter.get(
+  "/messages/get-messages",
+  authMiddleware,
+  ctrlWrapper(getDepMessages)
+);
+
+// post dep messages
 usersRouter.post(
-  "/add-message",
+  "/messages/add-message",
   messagesValidation,
-  ctrlWrapper(postDepMessagesByJoin)
+  depMiddleware,
+  ctrlWrapper(postDepMessages)
+);
+
+// answer dep message
+usersRouter.post(
+  "/messages/answer-message",
+  answerMessagesValidation,
+  getDepMessageMiddleware,
+  ctrlWrapper(answerDepMessage)
 );
 
 module.exports = usersRouter;

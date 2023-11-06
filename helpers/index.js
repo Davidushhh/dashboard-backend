@@ -1,7 +1,12 @@
+const { getRowCount, makePoolQuery } = require("./getRowCount");
 const { getQueryStringFromArray } = require("./generateTemplateString");
-const { getRowCount } = require("./getRowCount");
+const { getRecieverNameTemplete } = require("./getRecieverNameTemplete");
+const { resultFormater } = require("./resultFormater");
 
 module.exports = {
-  getQueryStringFromArray,
+  makePoolQuery,
   getRowCount,
+  getQueryStringFromArray,
+  getRecieverNameTemplete,
+  resultFormater,
 };

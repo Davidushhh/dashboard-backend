@@ -1,11 +1,8 @@
 const getTemplateString = (array) => {
-  console.log("--array--", array);
-
   const template = array
     .map((item) => `${item.key} = '${item.value}'`)
     .join(" AND ");
 
-  console.log("template:", template);
   return template;
 };
 

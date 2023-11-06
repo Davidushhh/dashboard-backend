@@ -1,38 +1,35 @@
 const express = require("express");
 const tableRouter = express.Router();
 
-const { ctrlWrapper } = require("../../middlewares");
+const {
+  ctrlWrapper,
+  authMiddleware,
+  userTablesAccessChecker,
+} = require("../../middlewares");
 
 const {
-  getTranformedData,
-  getTranformedDataBar,
-  getTranformedDataDonut,
-  getDataForBar,
-  getSumDataForBar,
-  getDataForBarSQL,
-  getDataForChartKnex,
+  getUserTable,
+
+  // getAllTables,
+  // createTable,
+  // getTableColumns,
+  // getTableColumnValues,
 } = require("../../controllers/tables");
 
-tableRouter.get("/getDataForBar/:table", ctrlWrapper(getDataForBar));
-
-tableRouter.get("/getDataForBarSQL/:table", ctrlWrapper(getDataForBarSQL));
-
-tableRouter.get("/getSumDataForBar/:table/bar", ctrlWrapper(getSumDataForBar));
-
+// get user table
 tableRouter.get(
-  "/getDataForChartKnex/:table",
-  ctrlWrapper(getDataForChartKnex)
+  "/get-table/:table",
+  authMiddleware,
+  userTablesAccessChecker,
+  ctrlWrapper(getUserTable)
 );
 
-// test routes
-tableRouter.get("/getTranformedData/:table", ctrlWrapper(getTranformedData));
-tableRouter.get(
-  "/getTranformedDataBar/:table/bar",
-  ctrlWrapper(getTranformedDataBar)
-);
-tableRouter.get(
-  "/getTranformedDataDonut/:table/donut",
-  ctrlWrapper(getTranformedDataDonut)
-);
+// tableRouter.get("/tables/all", ctrlWrapper(getAllTables));
+// tableRouter.get("/tables/columns/all/:table", ctrlWrapper(getTableColumns));
+// tableRouter.get(
+//   "/tables/columns/values/:table/:column",
+//   ctrlWrapper(getTableColumnValues)
+// );
+// tableRouter.post("/tables/create", ctrlWrapper(createTable));
 
 module.exports = tableRouter;
