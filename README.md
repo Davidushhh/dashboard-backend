@@ -1,4 +1,4 @@
-# dashboard-backend
+# Dashboard backend - Кабінет депутата, Анаітика
 
 Dashboard backend - Node.js, SQL,
 
