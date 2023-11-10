@@ -4,19 +4,20 @@ const getUserTable = async (req, res, next) => {
   const { table = null } = req.params;
   console.log("table:", table);
 
-  const tableQuery = `SELECT * FROM ?`;
+  console.log("here");
+  const tableQuery = `SELECT * FROM ${table}`;
 
   try {
-    pool.query(tableQuery, [table], function (err, result, fields) {
+    pool.query(tableQuery, function (err, result, fields) {
       if (err) {
         return res.status(404).json({
-          message: "not found",
+          message: "table not found",
           code: 404,
         });
       }
 
       res.status(200).json({
-        message: "user table",
+        message: "table data",
         code: 200,
         length: result.length,
         data: result,

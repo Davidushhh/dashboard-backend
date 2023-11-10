@@ -8,19 +8,23 @@ const {
 } = require("../../middlewares");
 
 const {
+  getTablesList,
   getUserTable,
 
-  // getAllTables,
+  getAllTables,
   // createTable,
   // getTableColumns,
   // getTableColumnValues,
 } = require("../../controllers/tables");
 
-// get user table
+// список доступних таблиць воркера
+tableRouter.get("/get-tables", authMiddleware, ctrlWrapper(getTablesList));
+
+// дістати всю таблицю воркера
 tableRouter.get(
   "/get-table/:table",
   authMiddleware,
-  userTablesAccessChecker,
+  // userTablesAccessChecker,
   ctrlWrapper(getUserTable)
 );
 

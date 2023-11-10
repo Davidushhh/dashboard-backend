@@ -5,7 +5,7 @@ const userTablesAccessChecker = async (req, res, next) => {
   const { id } = req.user;
   console.log("table in middleware checker:", table);
 
-  const tableQuery = `SELECT structureName FROM dep_user WHERE id = ? AND tablesAccess LIKE ?;`;
+  const tableQuery = `SELECT structureName FROM dep_users WHERE id = ? AND tablesAccess LIKE ?;`;
   const searchPattern = `%${table}%`;
 
   try {
@@ -18,10 +18,10 @@ const userTablesAccessChecker = async (req, res, next) => {
 
     pool.query(tableQuery, [id, searchPattern], function (err, result, fields) {
       if (err) {
+        console.log(err);
         return res.status(404).json({
           message: "not found",
           code: 404,
-          data: err,
         });
       }
 
