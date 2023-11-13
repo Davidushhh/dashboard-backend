@@ -2,9 +2,7 @@ const { pool } = require("../../models/connection");
 
 const getUserTable = async (req, res, next) => {
   const { table = null } = req.params;
-  console.log("table:", table);
 
-  console.log("here");
   const tableQuery = `SELECT * FROM ${table}`;
 
   try {
@@ -16,10 +14,13 @@ const getUserTable = async (req, res, next) => {
         });
       }
 
+      console.log(Object.keys(result[0]));
+
       res.status(200).json({
         message: "table data",
         code: 200,
         length: result.length,
+        columns: Object.keys(result[0]),
         data: result,
       });
     });

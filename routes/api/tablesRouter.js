@@ -10,17 +10,16 @@ const {
 const {
   getTablesList,
   getUserTable,
-
-  getAllTables,
-  // createTable,
-  // getTableColumns,
-  // getTableColumnValues,
+  updateUserTable,
 } = require("../../controllers/tables");
+const {
+  serviceUpdateValidation,
+} = require("../../middlewares/tablesMiddlewares");
 
 // список доступних таблиць воркера
 tableRouter.get("/get-tables", authMiddleware, ctrlWrapper(getTablesList));
 
-// дістати всю таблицю воркера
+// дістати всю таблицю користувача з колонки tableAcces
 tableRouter.get(
   "/get-table/:table",
   authMiddleware,
@@ -28,12 +27,12 @@ tableRouter.get(
   ctrlWrapper(getUserTable)
 );
 
-// tableRouter.get("/tables/all", ctrlWrapper(getAllTables));
-// tableRouter.get("/tables/columns/all/:table", ctrlWrapper(getTableColumns));
-// tableRouter.get(
-//   "/tables/columns/values/:table/:column",
-//   ctrlWrapper(getTableColumnValues)
-// );
-// tableRouter.post("/tables/create", ctrlWrapper(createTable));
+// оновити дані таблиці користувача - поля статус чи комент
+tableRouter.patch(
+  "/:table",
+  authMiddleware,
+  // serviceUpdateValidation,
+  ctrlWrapper(updateUserTable)
+);
 
 module.exports = tableRouter;
