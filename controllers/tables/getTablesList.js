@@ -4,7 +4,8 @@ const getTablesList = async (req, res, next) => {
   const { id } = req.user;
   const { DB } = process.env;
 
-  const tablesAccessQuery = `SELECT tablesAccess FROM dep_users WHERE id = ?;`;
+  const tablesAccessQuery = `SELECT tablesAccess 
+    FROM dep_users WHERE id = ?;`;
 
   try {
     pool.query(tablesAccessQuery, [id], async (err, result) => {
@@ -25,24 +26,35 @@ const getTablesList = async (req, res, next) => {
       const tableNames = result[0].tablesAccess.split(",");
 
       const tablesInfoPromises = tableNames.map((tableName) => {
-        console.log("---", tableName);
         return new Promise((resolve, reject) => {
           const updateTimeQuery = `
-            SELECT UPDATE_TIME
-            FROM information_schema.tables
-            WHERE table_schema = ?
-            AND table_name = ?;
+            SELECT UPDATE_TIME, vs.serviceName_cyrillic, vs.documents, vs.details
+            FROM information_schema.tables t
+            LEFT JOIN veteranServices_list vs ON t.table_name = vs.tableName
+            WHERE t.table_schema = ?
+            AND t.table_name = ?;
           `;
 
           pool.query(updateTimeQuery, [DB, tableName], (err, result) => {
             if (err) {
               reject(err);
             } else {
-              console.log(result);
-
               const updateTime =
                 result.length > 0 ? result[0].UPDATE_TIME : null;
-              resolve({ tableName, updateTime });
+              const serviceName_cyrillic =
+                result.length > 0 ? result[0].serviceName_cyrillic : null;
+              const documents = result.length > 0 ? result[0].documents : null;
+              const details = result.length > 0 ? result[0].details : null;
+
+              console.log("res:", result);
+
+              resolve({
+                tableName,
+                serviceName_cyrillic,
+                documents,
+                details,
+                updateTime,
+              });
             }
           });
         });
@@ -51,7 +63,7 @@ const getTablesList = async (req, res, next) => {
       const tablesInfo = await Promise.all(tablesInfoPromises);
 
       return res.status(200).json({
-        message: "tables list with update time",
+        message: "tables list with update time and additional data",
         code: 200,
         data: tablesInfo,
       });
