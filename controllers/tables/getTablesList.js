@@ -43,7 +43,8 @@ const getTablesList = async (req, res, next) => {
                 result.length > 0 ? result[0].UPDATE_TIME : null;
               const serviceName_cyrillic =
                 result.length > 0 ? result[0].serviceName_cyrillic : null;
-              const documents = result.length > 0 ? result[0].documents : null;
+              const documents =
+                result.length > 0 ? result[0].documents.split(",") : null;
               const details = result.length > 0 ? result[0].details : null;
 
               console.log("res:", result);
