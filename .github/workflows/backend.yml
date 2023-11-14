@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Env Capture
-        run: cp /home/david/secret/.env /home/david/backend/_work/dashboard-backend/dashboard-backend/
+        run: cp /home/david/secret/.env /var/www/mywebsite/_work/dashboard-backend/dashboard-backend/
 
       - name: Install dependendencies.
         run: 
