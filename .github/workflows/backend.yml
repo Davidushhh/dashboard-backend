@@ -11,29 +11,28 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]  # Перелік версій Node.js для тестування
+        node-version: [18.17.0]  # Specify Node.js version
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Install Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4  # Update to version v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Env Capture
         run: cp /home/david/secret/.env /var/www/mywebsite/_work/dashboard-backend/dashboard-backend/
 
-      - name: Install dependendencies.
-        run: 
-          npm install
- 
+      - name: Install dependencies
+        run: npm install
+
       - name: pm2 stop 0
         run: pm2 stop 0
- 
+
       - name: pm2 start 0
         run: pm2 start 0
- 
+
       - name: pm2 save
         run: pm2 save
