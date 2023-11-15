@@ -2,10 +2,7 @@ const { pool } = require("../../models/connection");
 
 const updateUserTable = async (req, res, next) => {
   const { table = null } = req.params;
-  console.log("req.body:", req.body);
-
   const { id, data = null } = req.body;
-  // { id: 16, data: { serviceStatus: 'Виконано', comment: 'new comment' } }
 
   try {
     if (!data) {
@@ -22,7 +19,7 @@ const updateUserTable = async (req, res, next) => {
 
     const updateQuery = `UPDATE ${table} SET ${setColumns} WHERE id = ?`;
 
-    // Формуємо значення для підстановки в запит
+    // Формуємо масив значеннь для підстановки в запит
     const values = [...Object.values(data), id];
 
     pool.query(updateQuery, values, (err, result) => {

@@ -14,7 +14,7 @@ const start = async () => {
       if (err) {
         console.log("Server launch failed", err);
       }
-      console.log(`Server running. Use our API on port: ${PORT}`);
+      console.log(`Server --Cabinet-- running. Use our API on port: ${PORT}`);
     });
   } catch (error) {
     console.log(error.message);

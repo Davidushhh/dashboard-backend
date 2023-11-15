@@ -39,22 +39,21 @@ const getTablesList = async (req, res, next) => {
             if (err) {
               reject(err);
             } else {
-              const updateTime =
-                result.length > 0 ? result[0].UPDATE_TIME : null;
-              const serviceName_cyrillic =
-                result.length > 0 ? result[0].serviceName_cyrillic : null;
-              const documents =
-                result.length > 0 ? result[0].documents.split(",") : null;
-              const details = result.length > 0 ? result[0].details : null;
-
               console.log("res:", result);
+
+              if (!result || result.length === 0) {
+                return res.status(404).json({
+                  message: "not found data",
+                  code: 404,
+                });
+              }
 
               resolve({
                 tableName,
-                serviceName_cyrillic,
-                documents,
-                details,
-                updateTime,
+                serviceName_cyrillic: result[0].serviceName_cyrillic,
+                documents: result[0].documents.split(","),
+                details: result[0].details,
+                updateTime: result[0].UPDATE_TIME,
               });
             }
           });
