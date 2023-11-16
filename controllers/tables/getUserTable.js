@@ -1,3 +1,4 @@
+const { dateTransformer } = require("../../helpers");
 const { pool } = require("../../models/connection");
 
 const getUserTable = async (req, res, next) => {
@@ -17,9 +18,14 @@ const getUserTable = async (req, res, next) => {
       const columns = Object.keys(result[0]).filter(
         (column) => column !== "veteranId"
       );
-      const dataWithoutVeteranId = result.map((item) => {
-        const { veteranId, ...rest } = item;
-        return rest;
+      const dataWithoutVeteranId = result.map((row) => {
+        const { veteranId, createdAt, updatedAt, ...rest } = row;
+
+        return {
+          ...rest,
+          createdAt: dateTransformer(row.createdAt),
+          updatedAt: dateTransformer(row.updatedAt),
+        };
       });
 
       res.status(200).json({
