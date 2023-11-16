@@ -11,6 +11,7 @@ const {
   getTablesList,
   getUserTable,
   updateUserTable,
+  createCSVfile,
 } = require("../../controllers/tables");
 const {
   serviceUpdateValidation,
@@ -33,6 +34,13 @@ tableRouter.patch(
   authMiddleware,
   // serviceUpdateValidation,
   ctrlWrapper(updateUserTable)
+);
+
+// трансформувати дані з БД в CSV і відправити на фронт
+tableRouter.get(
+  "/create-csv/:table",
+  // authMiddleware,
+  ctrlWrapper(createCSVfile)
 );
 
 module.exports = tableRouter;

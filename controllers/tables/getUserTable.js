@@ -14,14 +14,20 @@ const getUserTable = async (req, res, next) => {
         });
       }
 
-      console.log(Object.keys(result[0]));
+      const columns = Object.keys(result[0]).filter(
+        (column) => column !== "veteranId"
+      );
+      const dataWithoutVeteranId = result.map((item) => {
+        const { veteranId, ...rest } = item;
+        return rest;
+      });
 
       res.status(200).json({
         message: "table data",
         code: 200,
         length: result.length,
-        columns: Object.keys(result[0]),
-        data: result,
+        columns,
+        data: dataWithoutVeteranId,
       });
     });
   } catch (error) {
