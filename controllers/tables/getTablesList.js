@@ -39,8 +39,6 @@ const getTablesList = async (req, res, next) => {
             if (err) {
               reject(err);
             } else {
-              console.log("res:", result);
-
               if (!result || result.length === 0) {
                 return res.status(404).json({
                   message: "not found data",
