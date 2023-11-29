@@ -16,3 +16,5 @@ const mailer = nodemailer.createTransport({
 module.exports = {
   mailer,
 };
+
+console.log("hi");
