@@ -20,7 +20,9 @@ const postDepMessages = async (req, res, next) => {
     isAnswerByEmail = null,
   } = req.body;
 
-  const { deputyId, councilId, emailList } = req.dep;
+  const { deputyId, councilId = null, emailList } = req.dep;
+
+  console.log("req.dep in controller:", deputyId, councilId, emailList);
 
   const newMessageQuery =
     "INSERT INTO dep_messages (deputyId, councilId, senderName, senderEmail, senderAddress, senderPhone, recieverLevel, recieverDistrict, recieverHromada, recieverName, title, text, isAnswerByEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

@@ -9,13 +9,58 @@ const depMiddleware = async (req, res, next) => {
     recieverHromada = null,
   } = req.body;
 
-  const depDataQuery = `SELECT
+  let depDataQuery = `SELECT
   u.id,
   u.email
   FROM dep_users AS u
   WHERE u.structureName = ?;`;
 
+  if (recieverName === "isHromadaHead") {
+    depDataQuery = `
+    SELECT
+    u.id,
+    u.email
+    FROM dep_users AS u
+    WHERE u.structureName LIKE ?;`;
+  }
+
+  console.log("injection:", `${recieverHromada}%`);
+
   try {
+    if (recieverName === "isHromadaHead") {
+      pool.query(
+        depDataQuery,
+        [`${recieverHromada}%`],
+        async function (err, result, fields) {
+          if (err) {
+            console.log("err+", err);
+            return res.status(404).json({
+              message: err,
+              code: 404,
+            });
+          }
+
+          if (!result.length) {
+            return res.status(404).json({
+              message: "not found",
+              code: 404,
+            });
+          }
+
+          console.log("result in middle:", result);
+
+          req.dep = {
+            deputyId: result[0].id,
+            councilId: null,
+            emailList: result[0].email,
+          };
+          next();
+        }
+      );
+    }
+
+    console.log("--you dont have to see it!!!");
+
     pool.query(
       depDataQuery,
       [recieverName],
@@ -63,6 +108,8 @@ const depMiddleware = async (req, res, next) => {
       }
     );
   } catch (error) {
+    console.log("err in catch+", error);
+
     return res.status(500).json({
       message: "dep data error",
       code: 500,
