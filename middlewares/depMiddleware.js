@@ -21,10 +21,11 @@ const depMiddleware = async (req, res, next) => {
     u.id,
     u.email
     FROM dep_users AS u
-    WHERE u.structureName LIKE ?;`;
+    WHERE u.structureName LIKE ? AND u.access = 'hromada';`;
   }
 
   console.log("injection:", `${recieverHromada}%`);
+  console.log("recieverName:", recieverName);
 
   try {
     if (recieverName === "isHromadaHead") {
@@ -50,36 +51,37 @@ const depMiddleware = async (req, res, next) => {
           console.log("result in middle:", result);
 
           req.dep = {
-            deputyId: result[0].id,
-            councilId: null,
+            deputyId: null,
+            councilId: result[0].id,
             emailList: result[0].email,
           };
+
           next();
         }
       );
-    }
+    } else {
+      console.log(12354);
+      console.log("--you dont have to see it!!!");
 
-    console.log("--you dont have to see it!!!");
+      pool.query(
+        depDataQuery,
+        [recieverName],
+        async function (err, result, fields) {
+          if (err) {
+            return res.status(404).json({
+              message: err,
+              code: 404,
+            });
+          }
 
-    pool.query(
-      depDataQuery,
-      [recieverName],
-      async function (err, result, fields) {
-        if (err) {
-          return res.status(404).json({
-            message: err,
-            code: 404,
-          });
-        }
+          if (!result.length) {
+            return res.status(404).json({
+              message: "not found",
+              code: 404,
+            });
+          }
 
-        if (!result.length) {
-          return res.status(404).json({
-            message: "not found",
-            code: 404,
-          });
-        }
-
-        const councilDataQuery = `SELECT
+          const councilDataQuery = `SELECT
         u.id,
         u.email
         FROM dep_users AS u
@@ -93,20 +95,21 @@ const depMiddleware = async (req, res, next) => {
         (u.hromada = '${recieverHromada}' AND '${recieverLevel}' = 'hromada')
         );`;
 
-        const councilData = await makePoolQuery(councilDataQuery);
+          const councilData = await makePoolQuery(councilDataQuery);
 
-        const emailList = [];
-        result.map((item) => emailList.push(item.email));
-        councilData.map((item) => emailList.push(item.email));
+          const emailList = [];
+          result.map((item) => emailList.push(item.email));
+          councilData.map((item) => emailList.push(item.email));
 
-        req.dep = {
-          deputyId: result[0].id,
-          councilId: councilData[0].id,
-          emailList: emailList,
-        };
-        next();
-      }
-    );
+          req.dep = {
+            deputyId: result[0].id,
+            councilId: councilData[0].id,
+            emailList: emailList,
+          };
+          next();
+        }
+      );
+    }
   } catch (error) {
     console.log("err in catch+", error);
 

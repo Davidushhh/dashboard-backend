@@ -68,12 +68,16 @@ const postDepMessages = async (req, res, next) => {
           from: process.env.SEND_MAIL_FROM,
           to: emailList,
           subject: title,
-          text: `Відправник: ${senderName} \nE-mail відправника: ${senderEmail} 
+          text: `Відправник: ${senderName} \nE-mail відправника: ${senderEmail}
           \nОтримувач:\n${getRecieverNameTemplete(
             recieverLevel,
             recieverDistrict,
             recieverHromada
-          )} \n${recieverName} 
+          )} \n${
+            recieverName === "isHromadaHead"
+              ? "Голова територіальної громади"
+              : recieverName
+          }
           \nТекст зверненя: \n${text}
           \n
           Переглянути та відповісти на звернення можна в Кабінеті депутата за посиланням: https://analytics.carpathia.gov.ua/cabinet/profile/messages/all
@@ -90,12 +94,16 @@ const postDepMessages = async (req, res, next) => {
           from: process.env.SEND_MAIL_FROM,
           to: senderEmail,
           subject: title,
-          text: `Відправник: ${senderName} \nE-mail відправника: ${senderEmail} 
+          text: `Відправник: ${senderName} \nE-mail відправника: ${senderEmail}
           \nОтримувач:\n${getRecieverNameTemplete(
             recieverLevel,
             recieverDistrict,
             recieverHromada
-          )} \n${recieverName} 
+          )} \n${
+            recieverName === "isHromadaHead"
+              ? "Голова територіальної громади"
+              : recieverName
+          }
           \nТекст зверненя: \n${text}`,
           attachments: [
             {
