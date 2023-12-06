@@ -59,6 +59,10 @@ const createMessagePdf = async (messageData) => {
     doc.text("Депутату Закарпатської обласної ради", 110, 40);
   }
 
+  if (recieverName === "isHromadaHead") {
+    doc.text(`Голові ТГ ${recieverHromada}`, 110, 40);
+  }
+
   if (recieverLevel === "district" && recieverDistrict) {
     doc.text(
       `Депутату ${recieverDistrict.slice(0, -2) + "ої"} районної ради`,
@@ -67,11 +71,17 @@ const createMessagePdf = async (messageData) => {
     );
   }
 
-  if (recieverLevel === "hromada" && recieverHromada) {
+  if (
+    recieverLevel === "hromada" &&
+    recieverHromada &&
+    recieverName !== "isHromadaHead"
+  ) {
     doc.text(`Депутату ТГ ${recieverHromada}`, 110, 40);
   }
 
-  doc.text(recieverName, 110, 45);
+  if (recieverName !== "isHromadaHead") {
+    doc.text(recieverName, 110, 45);
+  }
 
   if (recieverEmail) {
     doc.text(`e-mail: ${recieverEmail}`, 110, 50);

@@ -24,9 +24,6 @@ const depMiddleware = async (req, res, next) => {
     WHERE u.structureName LIKE ? AND u.access = 'hromada';`;
   }
 
-  console.log("injection:", `${recieverHromada}%`);
-  console.log("recieverName:", recieverName);
-
   try {
     if (recieverName === "isHromadaHead") {
       pool.query(
@@ -34,7 +31,6 @@ const depMiddleware = async (req, res, next) => {
         [`${recieverHromada}%`],
         async function (err, result, fields) {
           if (err) {
-            console.log("err+", err);
             return res.status(404).json({
               message: err,
               code: 404,
@@ -48,8 +44,6 @@ const depMiddleware = async (req, res, next) => {
             });
           }
 
-          console.log("result in middle:", result);
-
           req.dep = {
             deputyId: null,
             councilId: result[0].id,
@@ -60,9 +54,6 @@ const depMiddleware = async (req, res, next) => {
         }
       );
     } else {
-      console.log(12354);
-      console.log("--you dont have to see it!!!");
-
       pool.query(
         depDataQuery,
         [recieverName],
@@ -111,8 +102,6 @@ const depMiddleware = async (req, res, next) => {
       );
     }
   } catch (error) {
-    console.log("err in catch+", error);
-
     return res.status(500).json({
       message: "dep data error",
       code: 500,

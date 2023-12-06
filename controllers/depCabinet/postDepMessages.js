@@ -22,8 +22,6 @@ const postDepMessages = async (req, res, next) => {
 
   const { deputyId, councilId = null, emailList } = req.dep;
 
-  console.log("req.dep in controller:", deputyId, councilId, emailList);
-
   const newMessageQuery =
     "INSERT INTO dep_messages (deputyId, councilId, senderName, senderEmail, senderAddress, senderPhone, recieverLevel, recieverDistrict, recieverHromada, recieverName, title, text, isAnswerByEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -40,7 +38,9 @@ const postDepMessages = async (req, res, next) => {
         recieverLevel,
         recieverDistrict,
         recieverHromada,
-        recieverName,
+        recieverName === "isHromadaHead"
+          ? "Голові територіальної громади"
+          : recieverName,
         title,
         text,
         isAnswerByEmail,
@@ -75,7 +75,7 @@ const postDepMessages = async (req, res, next) => {
             recieverHromada
           )} \n${
             recieverName === "isHromadaHead"
-              ? "Голова територіальної громади"
+              ? "Голові територіальної громади"
               : recieverName
           }
           \nТекст зверненя: \n${text}
@@ -101,7 +101,7 @@ const postDepMessages = async (req, res, next) => {
             recieverHromada
           )} \n${
             recieverName === "isHromadaHead"
-              ? "Голова територіальної громади"
+              ? "Голові територіальної громади"
               : recieverName
           }
           \nТекст зверненя: \n${text}`,
