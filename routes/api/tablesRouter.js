@@ -37,7 +37,7 @@ tableRouter.patch(
 );
 
 // трансформувати дані з БД в CSV і відправити на фронт
-tableRouter.get(
+tableRouter.post(
   "/create-csv/:table",
   // authMiddleware,
   ctrlWrapper(createCSVfile)
