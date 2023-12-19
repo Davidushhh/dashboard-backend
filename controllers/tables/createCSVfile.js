@@ -4,10 +4,8 @@ const path = require("path");
 const { dateTransformer } = require("../../helpers/dateTransformer");
 
 const createCSVfile = async (req, res, next) => {
-  // const { table = null } = req.params;
   const result = req.body;
 
-  console.log("body:", result);
   try {
     const columns =
       Object.keys(result[0])
@@ -29,10 +27,6 @@ const createCSVfile = async (req, res, next) => {
 
     const csvData = columns + rows;
 
-    console.log("columns:", columns);
-    console.log("rows:", rows);
-    console.log("csvData:", csvData);
-
     // Додаємо BOM до початку файлу
     const BOM = Buffer.from("\uFEFF", "utf-8");
     const pathToFile = path.join(__dirname, "table_data.csv");
@@ -44,12 +38,12 @@ const createCSVfile = async (req, res, next) => {
 
       res.setHeader(
         "Content-Disposition",
-        "attachment; filename=e-message.pdf"
+        "attachment; filename=table_data.csv"
       );
 
       res
         .status(201)
-        .json({ data: BOM + csvData })
+        .json({ code: 201, data: BOM + csvData })
         .sendFile("table_data.csv", { root: __dirname }, () => {
           fs.unlink(pathToFile, (err) => {
             if (err) {
