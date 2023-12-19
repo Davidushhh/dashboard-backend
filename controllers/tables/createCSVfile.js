@@ -8,18 +8,7 @@ const createCSVfile = async (req, res, next) => {
   const result = req.body;
 
   console.log("body:", result);
-
-  // const tableQuery = `SELECT * FROM ${table}`;
-
   try {
-    // pool.query(tableQuery, function (err, result, fields) {
-    //   if (err) {
-    //     return res.status(404).json({
-    //       message: "table not found",
-    //       code: 404,
-    //     });
-    //   }
-
     const columns =
       Object.keys(result[0])
         .filter((column) => column !== "veteranId")
@@ -52,6 +41,12 @@ const createCSVfile = async (req, res, next) => {
       if (err) {
         return res.status(500).json({ message: "csv export failed" });
       }
+
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader(
+        "Content-Disposition",
+        "attachment;filename=table_data.csv"
+      );
 
       res.status(201).sendFile("table_data.csv", { root: __dirname }, () => {
         fs.unlink(pathToFile, (err) => {
