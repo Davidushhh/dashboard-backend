@@ -42,19 +42,21 @@ const createCSVfile = async (req, res, next) => {
         return res.status(500).json({ message: "csv export failed" });
       }
 
-      res.setHeader("Content-Type", "text/csv");
       res.setHeader(
         "Content-Disposition",
-        "attachment;filename=table_data.csv"
+        "attachment; filename=e-message.pdf"
       );
 
-      res.status(201).sendFile("table_data.csv", { root: __dirname }, () => {
-        fs.unlink(pathToFile, (err) => {
-          if (err) {
-            res.status(500).json({ message: err.message });
-          }
+      res
+        .status(201)
+        .json({ data: BOM + csvData })
+        .sendFile("table_data.csv", { root: __dirname }, () => {
+          fs.unlink(pathToFile, (err) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            }
+          });
         });
-      });
     });
     // });
   } catch (error) {
