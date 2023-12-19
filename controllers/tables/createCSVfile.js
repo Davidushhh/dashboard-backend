@@ -1,6 +1,5 @@
-const fs = require("fs");
-const path = require("path");
-// const { pool } = require("../../models/connection");
+// const fs = require("fs");
+// const path = require("path");
 const { dateTransformer } = require("../../helpers/dateTransformer");
 
 const createCSVfile = async (req, res, next) => {
@@ -29,29 +28,27 @@ const createCSVfile = async (req, res, next) => {
 
     // Додаємо BOM до початку файлу
     const BOM = Buffer.from("\uFEFF", "utf-8");
-    const pathToFile = path.join(__dirname, "table_data.csv");
+    // const pathToFile = path.join(__dirname, "table_data.csv");
 
-    fs.writeFile(pathToFile, BOM + csvData, (err, data) => {
-      if (err) {
-        return res.status(500).json({ message: "csv export failed" });
-      }
+    // fs.writeFile(pathToFile, BOM + csvData, (err, data) => {
+    //   if (err) {
+    //     return res.status(500).json({ message: "csv export failed" });
+    //   }
 
-      res.setHeader(
-        "Content-Disposition",
-        "attachment; filename=table_data.csv"
-      );
+    // res.setHeader(
+    //   "Content-Disposition",
+    //   "attachment; filename=table_data.csv"
+    // );
 
-      res
-        .status(201)
-        .json({ code: 201, data: BOM + csvData })
-        .sendFile("table_data.csv", { root: __dirname }, () => {
-          fs.unlink(pathToFile, (err) => {
-            if (err) {
-              res.status(500).json({ message: err.message });
-            }
-          });
-        });
-    });
+    res.status(201).json({ code: 201, data: BOM + csvData });
+    // .sendFile("table_data.csv", { root: __dirname }, () => {
+    //   fs.unlink(pathToFile, (err) => {
+    //     if (err) {
+    //       res.status(500).json({ message: err.message });
+    //     }
+    //   });
+    // });
+    // });
     // });
   } catch (error) {
     return res.status(500).json({ message: error.message });
