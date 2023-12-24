@@ -36,6 +36,8 @@ const getTablesList = async (req, res, next) => {
           `;
 
           pool.query(updateTimeQuery, [DB, tableName], (err, result) => {
+            console.log(result);
+
             if (err) {
               reject(err);
             } else {
