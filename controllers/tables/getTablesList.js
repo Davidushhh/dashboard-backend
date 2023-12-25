@@ -48,7 +48,9 @@ const getTablesList = async (req, res, next) => {
                 resolve({
                   tableName,
                   serviceName_cyrillic: result[0].serviceName_cyrillic,
-                  documents: result[0].documents?.split(","),
+                  documents: result[0].documents
+                    ? result[0].documents?.split(",")
+                    : null,
                   details: result[0].details,
                   updateTime: result[0].UPDATE_TIME,
                 });
