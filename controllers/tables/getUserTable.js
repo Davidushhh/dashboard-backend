@@ -59,13 +59,16 @@ const getUserTable = async (req, res, next) => {
         }
 
         // Обробка результатів та вибірка необхідних полів
-        const dataWithoutVeteranId = result.map((row) => {
-          const { veteranId, createdAt, updatedAt, ...rest } = row;
+        const dataWithoutVeteranId = result.map((row, index) => {
+          const { id, veteranId = null, createdAt, updatedAt, ...rest } = row;
+
+          const idx = index + 1;
 
           return {
+            "№": idx,
             ...rest,
-            createdAt: dateTransformer(row.createdAt),
-            updatedAt: dateTransformer(row.updatedAt),
+            Створено: dateTransformer(row.createdAt),
+            Оновлено: dateTransformer(row.updatedAt),
           };
         });
 
