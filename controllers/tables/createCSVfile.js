@@ -8,34 +8,35 @@ const createCSVfile = async (req, res, next) => {
   try {
     const columns =
       Object.keys(result[0])
-        .filter((column) => column !== "veteranId")
-        .map((column) => {
-          switch (column) {
-            case "id":
-              return "Номер";
-            case "createdAt":
-              return "Створено";
-            case "updatedAt":
-              return "Оновлено";
-            default:
-              return column;
-          }
-        })
+        // .filter((column) => column !== "veteranId")
+        // .map((column) => {
+        //   console.log(column);
+        //   switch (column) {
+        //     case "id":
+        //       return "№ п/п";
+        //     case "createdAt":
+        //       return "Створено";
+        //     case "updatedAt":
+        //       return "Оновлено";
+        //     default:
+        //       return column;
+        //   }
+        // })
         .join(",") + "\n";
 
     const rows = result
-      .map((row, index) => {
-        const { id, veteranId = null, createdAt, updatedAt, ...rest } = row;
+      // .map((row, index) => {
+      //   const { id, veteranId = null, createdAt, updatedAt, ...rest } = row;
 
-        const idx = index + 1;
+      //   const idx = index + 1;
 
-        return {
-          idx,
-          ...rest,
-          createdAt: dateTransformer(row.createdAt),
-          updatedAt: dateTransformer(row.updatedAt),
-        };
-      })
+      //   return {
+      //     idx,
+      //     ...rest,
+      //     createdAt: dateTransformer(row.createdAt),
+      //     updatedAt: dateTransformer(row.updatedAt),
+      //   };
+      // })
       .map((row) => Object.values(row).join(","))
       .join("\n");
 

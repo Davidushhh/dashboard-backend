@@ -22,7 +22,17 @@ const getUserTable = async (req, res, next) => {
 
       const visibleColumns = columnsResult
         .filter((column) => column.COLUMN_COMMENT !== "not visible")
-        .map((column) => column.COLUMN_NAME);
+        .map((column) => {
+          console.log(column.COLUMN_NAME);
+          switch (column.COLUMN_NAME) {
+            case "createdAt":
+              return "Створено";
+            case "updatedAt":
+              return "Оновлено";
+            default:
+              return column.COLUMN_NAME;
+          }
+        });
 
       const editableColumns = columnsResult
         .filter((column) => column.COLUMN_COMMENT === "editable")
@@ -77,7 +87,7 @@ const getUserTable = async (req, res, next) => {
           message: "table data",
           code: 200,
           length: result.length,
-          columns: visibleColumns,
+          columns: ["№ п/п", ...visibleColumns],
           editableColumns,
           data: dataWithoutVeteranId,
         });
