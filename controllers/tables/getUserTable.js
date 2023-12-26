@@ -65,7 +65,8 @@ const getUserTable = async (req, res, next) => {
           const idx = index + 1;
 
           return {
-            "№": idx,
+            "№ п/п": idx,
+            id,
             ...rest,
             Створено: dateTransformer(row.createdAt),
             Оновлено: dateTransformer(row.updatedAt),

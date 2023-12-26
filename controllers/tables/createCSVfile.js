@@ -9,7 +9,7 @@ const createCSVfile = async (req, res, next) => {
     const columns =
       Object.keys(result[0])
         .filter((column) => column !== "veteranId")
-        .map((column) => (column === "id" ? "№" : column))
+        .map((column) => (column === "id" ? "№ п/п" : column))
         .join(",") + "\n";
 
     const rows = result
