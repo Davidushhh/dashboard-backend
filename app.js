@@ -10,8 +10,8 @@ const authRouter = require("./routes/api/authRouter");
 const depCabinetRouter = require("./routes/api/depCabinetRouter");
 
 const app = express();
-const formatsLogger =
-  app.get("env") === "development" ? "combined" : "combined";
+const formatsLogger = app.get("env") === "development" ? "short" : "short";
+// app.get("env") === "development" ? "combined" : "combined";
 
 //  create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(
@@ -19,7 +19,12 @@ const accessLogStream = fs.createWriteStream(
   { flags: "a" }
 );
 
-app.use(logger(formatsLogger, { stream: accessLogStream }));
+app.use(
+  logger(
+    formatsLogger
+    // , { stream: accessLogStream }
+  )
+);
 app.use(cors());
 app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));

@@ -9,13 +9,17 @@ const createCSVfile = async (req, res, next) => {
     const columns =
       Object.keys(result[0])
         .filter((column) => column !== "veteranId")
+        .map((column) => (column === "id" ? "№" : column))
         .join(",") + "\n";
 
     const rows = result
-      .map((row) => {
-        const { veteranId, createdAt, updatedAt, ...rest } = row;
+      .map((row, index) => {
+        const { id, veteranId = null, createdAt, updatedAt, ...rest } = row;
+
+        const idx = index + 1;
 
         return {
+          idx,
           ...rest,
           createdAt: dateTransformer(row.createdAt),
           updatedAt: dateTransformer(row.updatedAt),
