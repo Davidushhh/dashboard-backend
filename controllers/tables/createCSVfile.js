@@ -1,5 +1,3 @@
-// const fs = require("fs");
-// const path = require("path");
 const { dateTransformer } = require("../../helpers/dateTransformer");
 
 const createCSVfile = async (req, res, next) => {
