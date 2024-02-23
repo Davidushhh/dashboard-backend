@@ -25,7 +25,7 @@ jobs:
       - name: Env Capture
         run: cp /home/david/secret/.env /var/www/mywebsite/_work/dashboard-backend/dashboard-backend/
 
-      - name: Install dependencies
+      - name: Install dependencie
         run: npm install
 
       - name: pm2 stop 0
